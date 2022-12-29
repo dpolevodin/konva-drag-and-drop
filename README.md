@@ -1,1 +1,0 @@
-# konva-drag-and-drop
