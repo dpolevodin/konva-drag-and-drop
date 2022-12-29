@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
-import { Stage, Layer, Star, Text } from 'react-konva';
+import { Stage, Layer, Star, Text, Image } from 'react-konva';
+import useImage from "use-image";
 
 function generateShapes() {
   return [...Array(10)].map((_, i) => ({
@@ -14,7 +15,13 @@ function generateShapes() {
 const INITIAL_STATE = generateShapes();
 
 export const Layout: FC = () => {
+  const [image] = useImage('https://konvajs.org/assets/lion.png');
   const [stars, setStars] = React.useState(INITIAL_STATE);
+  const [isImageDragging, setIsImageDragging] = React.useState(false);
+
+  const handleDragImage = () => {
+    setIsImageDragging(!isImageDragging)
+  };
 
   const handleDragStart = (e: any) => {
     const id = e.target.id();
@@ -27,6 +34,7 @@ export const Layout: FC = () => {
       })
     );
   };
+
   const handleDragEnd = (e: any) => {
     setStars(
       stars.map((star) => {
@@ -38,9 +46,22 @@ export const Layout: FC = () => {
     );
   };
 
+
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>
+        <Image
+          image={image}
+          draggable={true}
+          scaleX={isImageDragging ? 1.1 : 1}
+          scaleY={isImageDragging ? 1.1 : 1}
+          shadowOffsetX={isImageDragging ? 10 : 5}
+          shadowOffsetY={isImageDragging ? 10 : 5}
+          onDragStart={handleDragImage}
+          onDragEnd={handleDragImage}
+          shadowBlur={10}
+          shadowOpacity={0.6}
+        />
         <Text text="Try to drag a star" />
         {stars.map((star) => (
           <Star
